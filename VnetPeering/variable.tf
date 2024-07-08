@@ -4,7 +4,7 @@
 
 variable "resource_group_name" {
   type = string
-  default = "rg" # Input your resource group
+  default = "rg-vnetpeering-eus-01" 
 }
 
 variable "location" {

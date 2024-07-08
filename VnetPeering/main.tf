@@ -24,13 +24,18 @@ provider "azurerm" {
 # RESOURCES
 #############################################################################
 
+# Create Resource Group
+resource "azurerm_resource_group" "example" {
+  name     = var.resource_group_name
+  location = var.location
+}
 
 # Create Azure Virtual Network - Web
 
 resource "azurerm_virtual_network" "web" {
   name                = var.vnet_name_web
   location            = var.location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.example.name
   address_space       = var.vnet_cidr_range_web
 
 # Create Subnet - Web
@@ -51,7 +56,7 @@ resource "azurerm_virtual_network" "web" {
 resource "azurerm_virtual_network" "db" {
   name                = var.vnet_name_db
   location            = var.location
-  resource_group_name = var.resource_group_name
+  resource_group_name = azurerm_resource_group.example.name
   address_space       = var.vnet_cidr_range_db
 
 # Create Subnet - Db
@@ -71,7 +76,7 @@ resource "azurerm_virtual_network" "db" {
 #############################################################################
 resource "azurerm_virtual_network_peering" "web-db" {
   name                      = "web-db"
-  resource_group_name       = var.resource_group_name
+  resource_group_name       = azurerm_resource_group.example.name
   virtual_network_name      = azurerm_virtual_network.web.name
   remote_virtual_network_id = azurerm_virtual_network.db.id
 }
@@ -79,7 +84,7 @@ resource "azurerm_virtual_network_peering" "web-db" {
 
 resource "azurerm_virtual_network_peering" "db-web" {
   name                      = "db-web"
-  resource_group_name       = var.resource_group_name
+  resource_group_name       = azurerm_resource_group.example.name
   virtual_network_name      = azurerm_virtual_network.db.name
   remote_virtual_network_id = azurerm_virtual_network.web.id
 }

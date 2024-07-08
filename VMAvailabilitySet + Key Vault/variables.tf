@@ -11,8 +11,8 @@ variable "location"{
 }
 
 # Input your resource Group
-variable "resource_group"{
-    default = "rg"
+variable "resource_group_name"{
+    default = "rg-VMSS-eus-01"
 }
 
 variable "vnet_name"{

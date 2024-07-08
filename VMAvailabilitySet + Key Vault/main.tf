@@ -14,12 +14,14 @@ terraform {
       version = "~> 3.0"
     }
   }
+
   backend "azurerm" {
-      resource_group_name  = "rg" # Input your resource Group
-      storage_account_name = "" # Inpur your storage account
-      container_name       = "" # Inpur your container
-      key                  = "" # Inpur your container credential
+      resource_group_name  = "rg" # Input resource group that contains storage account
+      storage_account_name = "" # Input storage account name
+      container_name       = "" # Input container name
+      key                  = "" # Input container credential
   }
+
 }
 
 #############################################################################
@@ -30,6 +32,12 @@ provider "azurerm" {
   features {}
 }
 
+
+# Create Resource Group
+resource "azurerm_resource_group" "example" {
+  name     = var.resource_group_name
+  location = var.location
+}
 
 #############################################################################
 # Key Vault RESOURCES
@@ -43,7 +51,7 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "kv1" {
   name                        = var.key_vault_name
   location                    = var.location
-  resource_group_name         = var.resource_group
+  resource_group_name         = azurerm_resource_group.example.name
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 7
@@ -107,12 +115,12 @@ resource "azurerm_virtual_network" "main" {
   name                = var.vnet_name
   address_space       = var.address_space
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
 }
 
 resource "azurerm_subnet" "internal" {
   name                 = "snet-${var.vnet_name}"
-  resource_group_name  = var.resource_group
+  resource_group_name  = azurerm_resource_group.example.name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = var.address_prefixes
 }
@@ -120,7 +128,7 @@ resource "azurerm_subnet" "internal" {
 resource "azurerm_public_ip" "pip" {
   name                    = var.public_ip
   location                = var.location
-  resource_group_name     = var.resource_group
+  resource_group_name     = azurerm_resource_group.example.name
   allocation_method       = "Static"
   idle_timeout_in_minutes = 30
 
@@ -129,7 +137,7 @@ resource "azurerm_public_ip" "pip" {
 resource "azurerm_network_interface" "main" {
   name                = "nic-${var.vm_name}"
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
 
   ip_configuration {
     name                          = "ipconfig"
@@ -142,7 +150,7 @@ resource "azurerm_network_interface" "main" {
 resource "azurerm_network_security_group" "inwayz" {
   name                = var.network_security_group
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
 
   security_rule {
     name                        = "allow-rdp"
@@ -160,7 +168,7 @@ resource "azurerm_network_security_group" "inwayz" {
 resource "azurerm_windows_virtual_machine" "example" {
   name                = var.vm_name
   depends_on = [ azurerm_key_vault.kv1 ]
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
   location            = var.location
   size                = var.vm_size
   admin_username      = azurerm_key_vault_secret.username.value
@@ -192,7 +200,7 @@ resource "azurerm_windows_virtual_machine" "example" {
 resource "azurerm_public_ip" "pip2" {
   name                    = var.public_ip2
   location                = var.location
-  resource_group_name     = var.resource_group
+  resource_group_name     = azurerm_resource_group.example.name
   allocation_method       = "Static"
   idle_timeout_in_minutes = 30
 
@@ -201,7 +209,7 @@ resource "azurerm_public_ip" "pip2" {
 resource "azurerm_network_interface" "main2" {
   name                = "nic-${var.vm_name2}"
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
 
   ip_configuration {
     name                          = "ipconfig"
@@ -214,7 +222,7 @@ resource "azurerm_network_interface" "main2" {
 resource "azurerm_network_security_group" "inwayz2" {
   name                = var.network_security_group2
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
 
   security_rule {
     name                        = "allow-rdp"
@@ -232,7 +240,7 @@ resource "azurerm_network_security_group" "inwayz2" {
 resource "azurerm_windows_virtual_machine" "example2" {
   name                = var.vm_name2
   depends_on = [ azurerm_key_vault.kv1 ]
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
   location            = var.location
   size                = var.vm_size
   admin_username      = azurerm_key_vault_secret.username.value
@@ -262,7 +270,7 @@ resource "azurerm_windows_virtual_machine" "example2" {
 resource "azurerm_availability_set" "example" {
   name                = var.availability_set
   location            = var.location
-  resource_group_name = var.resource_group
+  resource_group_name = azurerm_resource_group.example.name
 
   tags = {
     environment = "Production"
