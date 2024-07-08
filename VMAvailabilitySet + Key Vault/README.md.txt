@@ -1,0 +1,4 @@
+- Creates a virtual machine availability Set 
+- Creates a random password that will be used as the password for the VM
+- Creates an Azure Key Vault that will store the password for the VM
+- Stores the terraform state file in a 'backend' storage account in the cloud for remote access to all collaborators
