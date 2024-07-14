@@ -37,7 +37,7 @@ variable "admin_username"{
 
 
 variable "public_ip"{
-    default = "pip-vmss-01"
+    default = "pip"
 }
 
 variable "network_security_group"{
@@ -50,4 +50,16 @@ variable "load_balancer" {
 
 variable "virtual_machine_scale_set" {
     default = "vm-vmss-01"
+}
+
+variable "lb_backend_address_pool" {
+    default = "bkend-lb-vmss-01"
+}
+
+variable "lb_probe" {
+    default = "probe-lb-vmss-01"
+}
+
+variable "lb_rule" {
+    default = "rule-lb-vmss-01"
 }
