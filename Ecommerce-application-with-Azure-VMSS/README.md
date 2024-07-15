@@ -6,6 +6,6 @@ A VMSS enables optimal utilization of resouces by incorporating autoscaling of V
 
 The steps involved are given below:
 1. Create Load Balancer (Lb) - including Lb probe, frontend, backend pool, and Lb rules
-2. Create VMSS with custom script to install ecommerce application on Apache web server
+2. Create VMSS with custom script to install Apache web server and ecommerce application 
 3. Create Network Security Group and associate with network interface of VMSS. Add an inbound security rule to allow web traffic from the internet
 4. Enable autoscaling on the VMSS
