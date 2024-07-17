@@ -1,2 +1,2 @@
 # Infrastructure-as-Code
-Learn to deploy resources in the cloud using Infrastructure-as-Code with examples
+Deploy resources in the cloud using Infrastructure-as-Code and enjoy faster and consistent deployments, as well as unique capabilities of version control
