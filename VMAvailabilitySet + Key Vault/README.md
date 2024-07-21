@@ -1,7 +1,7 @@
 ## Virtual Machine Availability Set with Key Vault
 ___________________________________________________
 
-This template deploys a Virtual machine scale set in Azure having a randonmized password stored in a key vault. Furthermore, the terraform statefile is stored in a storage account to enable remote access to all collaborators
+This template deploys a Virtual Machine Availabiltiy Set in Azure having a randonmized password stored in a key vault. Furthermore, the terraform statefile is stored in a storage account to enable remote access to all collaborators
 
 Steps are given below:
 
