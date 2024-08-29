@@ -14,3 +14,6 @@ The steps involved are given below:
 5. Configure the autoscaling group
 6. Configure CloudWatch alarm
 7. Create S3 bucket and DynamoDB table
+
+Architecture is given below:
+![Solution Architecture](https://github.com/adejokun/Infrastructure-as-Code/blob/main/Image/Architecture.png)
