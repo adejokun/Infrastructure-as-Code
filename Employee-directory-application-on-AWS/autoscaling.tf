@@ -129,7 +129,7 @@ resource "aws_iam_role_policy_attachment" "ec2-DynamoDB" {
 
 # create an IAM role instance profile
 resource "aws_iam_instance_profile" "ec2" {
-  name = "profile-dir-app"
+  name = "instance-profile-dir-app"
   role = aws_iam_role.ec2.name
 }
 
@@ -162,7 +162,7 @@ resource "aws_autoscaling_group" "dir-app" {
   vpc_zone_identifier = [aws_subnet.main-01.id, aws_subnet.main-02.id]
   desired_capacity   = 2
   max_size           = 4
-  min_size           = 2
+  min_size           = 1
   health_check_type = "ELB"
   target_group_arns = [aws_lb_target_group.dir-app.arn]
 
