@@ -7,7 +7,7 @@ Autoscaling is achieved by deploying an autoscaling group comprising a custom la
 DynamoDB is preferred over Amazon RDS due to its flexible billing model and superior performance in high-scale applications
 
 The steps involved are given below:
-1. Create the networking architecture - VPC, internet gateway, route tables, subnets
+1. Create the networking resources - VPC, internet gateway, route tables, subnets
 2. Configure an application load balancer
 3. Create a launch template for EC2 instance
 4. Define the IAM role that enables temporary credentials for API calls to Amazon S3 and DynamoDB
