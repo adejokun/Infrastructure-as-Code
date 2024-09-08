@@ -111,6 +111,16 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
 
 }
 
+resource "aws_vpc_security_group_ingress_rule" "ssh" {
+  security_group_id = aws_security_group.dir-app.id
+  
+  cidr_ipv4   = "18.237.140.160/29" # EC2 Instance Connect service IP addresses in the us-west-2 region (for restricted access)
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+
+}
+
 resource "aws_vpc_security_group_egress_rule" "egress-all" {
   security_group_id = aws_security_group.dir-app.id
   cidr_ipv4         = "0.0.0.0/0"
