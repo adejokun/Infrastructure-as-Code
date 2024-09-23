@@ -62,7 +62,7 @@ resource "aws_lb" "dir-app" {
   name               = "lb-dir-app"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.dir-app.id]
+  security_groups    = [aws_security_group.elb.id]
   subnets            = [aws_subnet.main-01.id, aws_subnet.main-02.id]
 
 }
@@ -144,7 +144,7 @@ resource "aws_launch_template" "dir-app" {
   network_interfaces {
     associate_public_ip_address = true
     security_groups = [aws_security_group.dir-app.id]
-    subnet_id = aws_subnet.main-01.id
+    subnet_id = aws_subnet.private-01.id
   }
 
   iam_instance_profile {
@@ -159,7 +159,7 @@ resource "aws_launch_template" "dir-app" {
 # creates an autoscaling group
 resource "aws_autoscaling_group" "dir-app" {
   name = "ASG-dir-app"
-  vpc_zone_identifier = [aws_subnet.main-01.id, aws_subnet.main-02.id]
+  vpc_zone_identifier = [aws_subnet.private-01.id, aws_subnet.private-02.id]
   desired_capacity   = 2
   max_size           = 4
   min_size           = 1

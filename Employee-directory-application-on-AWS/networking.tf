@@ -55,12 +55,45 @@ resource "aws_route_table_association" "subnet-main-02" {
   depends_on = [aws_subnet.main-02]
 }
 
+resource "aws_route_table_association" "subnet-private-01" {
+  subnet_id      = aws_subnet.private-01.id
+  route_table_id = aws_route_table.rt.id
+
+  depends_on = [aws_subnet.private-01]
+}
+
+resource "aws_route_table_association" "subnet-private-02" {
+  subnet_id      = aws_subnet.private-02.id
+  route_table_id = aws_route_table.rt.id
+
+  depends_on = [aws_subnet.private-02]
+}
 
 
-# Create a subnets
-resource "aws_subnet" "main-01" {
+# Create subnets
+resource "aws_subnet" "main-01" {  # subnet for load balancer
   vpc_id     = aws_vpc.main.id
   cidr_block = "10.1.1.0/24"
+  availability_zone = "us-west-2a"
+
+  tags = {
+    Name = "subnet-vpc-elb-01"
+  }
+}
+
+resource "aws_subnet" "main-02" { # subnet for load balancer
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.1.2.0/24"
+  availability_zone = "us-west-2b"
+
+  tags = {
+    Name = "subnet-vpc-elb-02"
+  }
+}
+
+resource "aws_subnet" "private-01" { # subnet for autoscaling group
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.1.3.0/24"
   availability_zone = "us-west-2a"
 
   tags = {
@@ -68,9 +101,9 @@ resource "aws_subnet" "main-01" {
   }
 }
 
-resource "aws_subnet" "main-02" {
+resource "aws_subnet" "private-02" { # subnet for autoscaling group
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.1.2.0/24"
+  cidr_block = "10.1.4.0/24"
   availability_zone = "us-west-2b"
 
   tags = {
@@ -78,21 +111,19 @@ resource "aws_subnet" "main-02" {
   }
 }
 
-
-
-# Create a security groups
-resource "aws_security_group" "dir-app" {
-  name        = "dir-app"
-  description = "Allow internet traffic to employee directory application"
+# Create load balancer security group
+resource "aws_security_group" "elb" {
+  name        = "dir-app-elb"
+  description = "Allow internet traffic to employee directory application via application load balancer"
   vpc_id      = aws_vpc.main.id
 
   tags = {
-    Name = "dir-app"
+    Name = "dir-app-elb"
   }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "http" {
-  security_group_id = aws_security_group.dir-app.id
+  security_group_id = aws_security_group.elb.id
   
   cidr_ipv4   = "0.0.0.0/0"
   from_port   = 80
@@ -102,13 +133,31 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "https" {
-  security_group_id = aws_security_group.dir-app.id
+  security_group_id = aws_security_group.elb.id
   
   cidr_ipv4   = "0.0.0.0/0"
   from_port   = 443
   ip_protocol = "tcp"
   to_port     = 443
 
+}
+
+resource "aws_vpc_security_group_egress_rule" "egress-all" {
+  security_group_id = aws_security_group.elb.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
+}
+
+
+# Create EC2 security group
+resource "aws_security_group" "dir-app" {
+  name        = "dir-app-ec2"
+  description = "Allow SSH to ec2"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = "dir-app-ec2"
+  }
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ssh" {
@@ -121,9 +170,18 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 
 }
 
-resource "aws_vpc_security_group_egress_rule" "egress-all" {
+resource "aws_vpc_security_group_ingress_rule" "elb-traffic" {
+  security_group_id = aws_security_group.dir-app.id
+  
+  referenced_security_group_id = aws_security_group.elb.id
+  from_port   = 80
+  ip_protocol = "tcp"
+  to_port     = 80
+
+}
+
+resource "aws_vpc_security_group_egress_rule" "ec2-egress" {
   security_group_id = aws_security_group.dir-app.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # semantically equivalent to all ports
 }
-
