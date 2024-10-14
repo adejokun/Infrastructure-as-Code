@@ -71,7 +71,7 @@ resource "aws_route_table_association" "subnet-private-02" {
 
 
 # Create subnets
-resource "aws_subnet" "main-01" {  # subnet for load balancer
+resource "aws_subnet" "main-01" {  # subnet-01 for load balancer
   vpc_id     = aws_vpc.main.id
   cidr_block = "10.1.1.0/24"
   availability_zone = "us-west-2a"
@@ -81,7 +81,7 @@ resource "aws_subnet" "main-01" {  # subnet for load balancer
   }
 }
 
-resource "aws_subnet" "main-02" { # subnet for load balancer
+resource "aws_subnet" "main-02" { # subnet-02 for load balancer
   vpc_id     = aws_vpc.main.id
   cidr_block = "10.1.2.0/24"
   availability_zone = "us-west-2b"
@@ -91,7 +91,7 @@ resource "aws_subnet" "main-02" { # subnet for load balancer
   }
 }
 
-resource "aws_subnet" "private-01" { # subnet for autoscaling group
+resource "aws_subnet" "private-01" { # subnet-01 for autoscaling group
   vpc_id     = aws_vpc.main.id
   cidr_block = "10.1.3.0/24"
   availability_zone = "us-west-2a"
@@ -101,7 +101,7 @@ resource "aws_subnet" "private-01" { # subnet for autoscaling group
   }
 }
 
-resource "aws_subnet" "private-02" { # subnet for autoscaling group
+resource "aws_subnet" "private-02" { # subnet-02 for autoscaling group
   vpc_id     = aws_vpc.main.id
   cidr_block = "10.1.4.0/24"
   availability_zone = "us-west-2b"
@@ -149,7 +149,7 @@ resource "aws_vpc_security_group_egress_rule" "egress-all" {
 }
 
 
-# Create EC2 security group
+# Create EC2/autoscaling-group security group
 resource "aws_security_group" "dir-app" {
   name        = "dir-app-ec2"
   description = "Allow SSH to ec2"
@@ -173,7 +173,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 resource "aws_vpc_security_group_ingress_rule" "elb-traffic" {
   security_group_id = aws_security_group.dir-app.id
   
-  referenced_security_group_id = aws_security_group.elb.id
+  referenced_security_group_id = aws_security_group.elb.id # permits traffic from the load balancer
   from_port   = 80
   ip_protocol = "tcp"
   to_port     = 80
