@@ -9,7 +9,7 @@ The simple steps to derive the configuration are given below:
 3. Task definition
   - Create IAM task role (temporary credentials to interact with s3 and DynamoDB)
   - Create IAM task execution role (temporary credentials to pull image from ECR)
-  - Define container definition (s)
+  - Configure container definition(s)
 4. Define cluster
 5. Create service within cluster
   
