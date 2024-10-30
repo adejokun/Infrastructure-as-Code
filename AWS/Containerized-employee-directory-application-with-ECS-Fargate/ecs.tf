@@ -74,7 +74,7 @@ resource "aws_ecs_task_definition" "ecs-dir-app" {
   container_definitions = jsonencode([
     {
       name      = "employee-dir-app"
-      image     = "employee-directory"
+      image     = "992382381749.dkr.ecr.us-west-2.amazonaws.com/employee-directory:latest" # insert the URI of ecr image built from the Dockerfile 
       cpu       = 1024
       memory    = 3072
       essential = true
@@ -125,8 +125,6 @@ resource "aws_ecs_service" "ecs-dir-app" {
     target_group_arn = aws_lb_target_group.ecs-dir-app.id
     container_name   = "employee-dir-app"
     container_port   = 80
-  }
-
-  depends_on = [aws_lb_listener.dir-app, aws_iam_role_policy_attachment.ecs-execution-policy]
+  }  
 
 }

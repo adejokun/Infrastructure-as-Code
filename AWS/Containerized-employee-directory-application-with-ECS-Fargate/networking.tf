@@ -50,6 +50,19 @@ resource "aws_route_table_association" "subnet-main-02" {
   
 }
 
+resource "aws_route_table_association" "subnet-private-01" {
+  subnet_id      = aws_subnet.private-01.id
+  route_table_id = aws_route_table.rt.id
+  
+}
+
+resource "aws_route_table_association" "subnet-private-02" {
+  subnet_id      = aws_subnet.private-02.id
+  route_table_id = aws_route_table.rt.id
+  
+}
+
+
 ## Create subnets
 resource "aws_subnet" "main-01" { # public subnet-01 for load balancer 
   vpc_id     = aws_vpc.main.id
