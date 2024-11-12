@@ -12,12 +12,12 @@ resource "azurerm_service_plan" "webapp" {
   name                = "App-plan-webapp"
   resource_group_name = azurerm_resource_group.webapp.name
   location            = azurerm_resource_group.webapp.location
-  sku_name            = "F1"
+  sku_name            = "B1"
   os_type             = "Linux"
 }
 
 resource "azurerm_linux_web_app" "webapp" {
-  name                = "web-app-test-molo"
+  name                = "web-app-test-molo-01"
   resource_group_name = azurerm_resource_group.webapp.name
   location            = azurerm_service_plan.webapp.location
   service_plan_id     = azurerm_service_plan.webapp.id
