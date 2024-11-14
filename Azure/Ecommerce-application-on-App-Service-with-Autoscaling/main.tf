@@ -17,7 +17,7 @@ resource "azurerm_service_plan" "webapp" {
 }
 
 resource "azurerm_linux_web_app" "webapp" {
-  name                = "web-app-test-molo-01"
+  name                = "web-app-test-molo-02"
   resource_group_name = azurerm_resource_group.webapp.name
   location            = azurerm_service_plan.webapp.location
   service_plan_id     = azurerm_service_plan.webapp.id
