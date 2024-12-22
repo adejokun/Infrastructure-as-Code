@@ -32,7 +32,7 @@ spec:
       containers:
       - name: employee-dir
         image: 992382381749.dkr.ecr.us-west-2.amazonaws.com/employee-directory
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 
