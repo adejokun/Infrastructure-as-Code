@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: employee-dir
-        image: k8-app
+        image: 992382381749.dkr.ecr.us-west-2.amazonaws.com/employee-directory
         imagePullPolicy: Never
         ports:
         - containerPort: 80
