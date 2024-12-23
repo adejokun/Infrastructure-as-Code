@@ -26,8 +26,6 @@ kind: Deployment
 metadata:
   namespace: employee-dir
   name: employee-dir-depl
-  labels:
-    app.kubernetes.io/name: webapp
 spec:
   replicas: 1
   selector:
