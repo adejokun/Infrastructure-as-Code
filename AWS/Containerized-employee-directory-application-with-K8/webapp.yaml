@@ -1,7 +1,7 @@
 apiVersion: v1
-kind: Namespace-2
+kind: Namespace
 metadata:
-  name: employee-dir-app
+  name: employee-dir-app-2
 
 ---
 
