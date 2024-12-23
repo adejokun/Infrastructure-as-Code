@@ -1,6 +1,14 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: employee-dir
+
+---
+
+apiVersion: v1
 kind: Service
 metadata:
+  namespace: employee-dir
   name: employee-dir-service
 spec:
   type: NodePort
@@ -16,6 +24,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: employee-dir
   name: employee-dir-depl
   labels:
     app: dir-webapp
@@ -36,3 +45,26 @@ spec:
         ports:
         - containerPort: 80
 
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: employee-dir
+  name: ingress-employee-dir
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: employee-dir-service
+              port:
+                number: 80
