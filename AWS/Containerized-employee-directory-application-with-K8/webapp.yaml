@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: employee-dir-app-2
+  name: employee-dir-app
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: employee-dir-app-2
-  name: employee-dir-service-2
+  namespace: employee-dir-app
+  name: employee-dir-service
 spec:
   type: NodePort
   selector:
@@ -24,8 +24,8 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: employee-dir-app-2
-  name: employee-dir-depl-2
+  namespace: employee-dir-app
+  name: employee-dir-depl
 spec:
   replicas: 1
   selector:
@@ -37,7 +37,7 @@ spec:
         app: webapp
     spec:
       containers:
-      - name: employee-dir-2
+      - name: employee-dir
         image: 992382381749.dkr.ecr.us-west-2.amazonaws.com/employee-directory
         imagePullPolicy: Always
         ports:
@@ -48,8 +48,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  namespace: employee-dir-app-2
-  name: ingress-employee-dir-2
+  namespace: employee-dir-app
+  name: ingress-employee-dir
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -63,6 +63,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: employee-dir-service-2
+              name: employee-dir-service
               port:
                 number: 80
