@@ -1,4 +1,4 @@
-### IAM Policy
+### IAM 
 
 ## Create IAM role - task role
 resource "aws_iam_role" "ecs-task-role" {
