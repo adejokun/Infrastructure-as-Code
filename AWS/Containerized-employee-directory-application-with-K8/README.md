@@ -11,5 +11,5 @@ The steps involved are given below:
 4. Configure internet-facing Application Load Balancer Controller (alb) with helm:
     - create Service account for alb
     - associate an IAM OIDC (OpenID Connect) provider
-5. Run kubernetes deployment configuration yaml file using the kubectl commands 
+5. Create the kubernetes deployment configuration yaml file. Run configuration file using the kubectl commands 
 
