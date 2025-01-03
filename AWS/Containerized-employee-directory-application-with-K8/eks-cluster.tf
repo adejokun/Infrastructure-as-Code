@@ -1,82 +1,52 @@
-## IAM Role - EKS Cluster
+## Create Cluster, Managed Node Group, and associated resources
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 20.0"
 
-resource "aws_iam_role" "k8-cluster" {
-  name = "k8-t-cluster"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "sts:AssumeRole",
-          "sts:TagSession"
-        ]
-        Effect = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
+  cluster_name    = "k8-dir-app"
+  cluster_version = "1.31"
 
-resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.k8-cluster.name
-}
+  cluster_endpoint_public_access           = true
+  cluster_endpoint_private_access          = true 
+  cluster_endpoint_public_access_cidrs     = ["0.0.0.0/0"]
+  enable_irsa                              = true
+  vpc_id                                   = aws_vpc.k8-t-vpc.id
+  subnet_ids                               = [aws_subnet.private-01.id, aws_subnet.private-02.id] 
+  control_plane_subnet_ids                 = [aws_subnet.public-01.id, aws_subnet.public-02.id]
+  authentication_mode                      = "API"
+  enable_cluster_creator_admin_permissions = true
 
-## Access Entry
-# create access entry
-resource "aws_eks_access_entry" "k8-cluster" {
-  cluster_name      = aws_eks_cluster.k8-dir-app.name
-  principal_arn     = "arn:aws:iam::992382381749:user/Adedamola"
-  type              = "STANDARD"
-}
-
-# create access entry association
-resource "aws_eks_access_policy_association" "k8-cluster" {
-  cluster_name  = aws_eks_cluster.k8-dir-app.name
-  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-  principal_arn = "arn:aws:iam::992382381749:user/Adedamola"
-
-  access_scope {
-    type       = "cluster"
+  eks_managed_node_groups = {
+    eks_nodegroup_1 = {
+      ami_type       = "AL2_x86_64"
+      min_size       = 1
+      max_size       = 2
+      desired_size   = 1
+      instance_types = ["t3.medium"]
+      capacity_type  = "ON_DEMAND"
+    }
   }
 }
 
 
-## EKS Cluster
-resource "aws_eks_cluster" "k8-dir-app" {
-  name = "k8-t-dir-app"
-
-  access_config {
-    authentication_mode = "API"
-  }
-
-  role_arn = aws_iam_role.k8-cluster.arn
-  version  = "1.31"
-
-  vpc_config {
-    endpoint_private_access = "true"
-    endpoint_public_access  = "true"
-    public_access_cidrs     = ["0.0.0.0/0"] # restrict block for production workloads
-
-    subnet_ids = [
-      aws_subnet.public-01.id,
-      aws_subnet.public-02.id,
-    ]
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
-  ]
-
-
+# Attach policy to Managed Node Group IAM Role to enable access to Amazon S3
+resource "aws_iam_role_policy_attachment" "ecs-S3" {
+  role       = module.eks.eks_managed_node_groups.eks_nodegroup_1.iam_role_name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
+
+
+# Attach policy to Managed Node Group IAM Role to enable access to Amazon DynamoDB
+resource "aws_iam_role_policy_attachment" "ecs-DynamoDB" {
+  role       = module.eks.eks_managed_node_groups.eks_nodegroup_1.iam_role_name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+}
+
 
 
 ## Add-ons
 resource "aws_eks_addon" "vpc-cni" {
-  cluster_name  = aws_eks_cluster.k8-dir-app.name
+  cluster_name  = module.eks.cluster_name
   addon_name    = "vpc-cni"
   addon_version = "v1.18.5-eksbuild.1"
   configuration_values = jsonencode(
@@ -97,22 +67,22 @@ resource "aws_eks_addon" "vpc-cni" {
 }
 
 resource "aws_eks_addon" "pod-identity-agent" {
-  cluster_name = aws_eks_cluster.k8-dir-app.name
+  cluster_name = module.eks.cluster_name
   addon_name   = "eks-pod-identity-agent"
 }
 
 resource "aws_eks_addon" "kube-proxy" {
-  cluster_name = aws_eks_cluster.k8-dir-app.name
+  cluster_name = module.eks.cluster_name
   addon_name   = "kube-proxy"
 }
 
 resource "aws_eks_addon" "node-monitoring-agent" {
-  cluster_name = aws_eks_cluster.k8-dir-app.name
+  cluster_name = module.eks.cluster_name
   addon_name   = "eks-node-monitoring-agent"
 }
 
-resource "aws_eks_addon" "example" {
-  cluster_name                = "k8-t-dir-app"
+resource "aws_eks_addon" "coredns" {
+  cluster_name                = module.eks.cluster_name
   addon_name                  = "coredns"
   resolve_conflicts_on_create = "OVERWRITE"
 
@@ -130,6 +100,8 @@ resource "aws_eks_addon" "example" {
     }
   })
 }
+
+
 
 
 
