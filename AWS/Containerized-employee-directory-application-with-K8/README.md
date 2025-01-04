@@ -6,8 +6,8 @@ This terraform script has been developed to automatically provision a kubernetes
 
 The overview of the deployment steps is given below:
 1. Define foundational networking/security architecture - public subnets, private subnets, NAT gateway (NAT gateway is required for   internet connection to pods hosted in private subnets)
-2. Create the kubernetes control plane in the public subnets. Associated relevant permissions by attaching required policy   (AmazonEKSClusterPolicy) to an IAM role
-3. Create the worker nodes in the private subnets. Associated relevant permissions by attaching required policies    (AmazonEC2ContainerRegistryReadOnly, AmazonEKS_CNI_Policy, AmazonEKSWorkerNodePolicy, AmazonDynamoDBFullAccess, AmazonS3FullAccess) to an IAM role
+2. Create the kubernetes control plane in the public subnets. Associate relevant permissions by attaching required policy   (AmazonEKSClusterPolicy) to an IAM role
+3. Create the worker nodes in the private subnets. Associate relevant permissions by attaching required policies    (AmazonEC2ContainerRegistryReadOnly, AmazonEKS_CNI_Policy, AmazonEKSWorkerNodePolicy, AmazonDynamoDBFullAccess, AmazonS3FullAccess) to an IAM role
 4. Configure internet-facing Application Load Balancer Controller (alb) with helm:
     - create Service account for alb
     - associate an IAM OIDC (OpenID Connect) provider
@@ -20,4 +20,9 @@ aws eks update-kubeconfig --region us-west-2 --name k8-dir-app
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/adejokun/Infrastructure-as-Code/refs/heads/main/AWS/Containerized-employee-directory-application-with-K8/webapp.yaml 
+```
+7. Use the *kubectl get ingress* command to display the address of the load balancer controller. Paste displayed address in a browser to view application
+
+```
+kubectl get ingress/ingress-employee-dir -n employee-dir-app-02
 ```
