@@ -6,6 +6,13 @@ module "eks" {
   cluster_name    = "k8-dir-app"
   cluster_version = "1.31"
 
+  cluster_addons = {
+    coredns                = {}
+    eks-pod-identity-agent = {}
+    kube-proxy             = {}
+    vpc-cni                = {} 
+  }
+
   cluster_endpoint_public_access           = true
   cluster_endpoint_private_access          = true 
   cluster_endpoint_public_access_cidrs     = ["0.0.0.0/0"]
@@ -43,7 +50,13 @@ resource "aws_iam_role_policy_attachment" "ecs-DynamoDB" {
 }
 
 
+## Cluster add-on (node monitoring agent)
+resource "aws_eks_addon" "node-monitoring-agent" {
+  cluster_name = module.eks.cluster_name
+  addon_name   = "eks-node-monitoring-agent"
+}
 
+/*
 ## Add-ons
 resource "aws_eks_addon" "vpc-cni" {
   cluster_name  = module.eks.cluster_name
@@ -100,7 +113,7 @@ resource "aws_eks_addon" "coredns" {
     }
   })
 }
-
+*/
 
 
 
