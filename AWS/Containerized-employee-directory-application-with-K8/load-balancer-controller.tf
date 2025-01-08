@@ -13,7 +13,7 @@ module "lb_role" {
   }
 }
 
-## Service account for the load balancer controller serived from the IAM role
+## Service account for the load balancer controller derived from the IAM role
 resource "kubernetes_service_account" "service-account" {
   metadata {
     name = "aws-load-balancer-controller"
