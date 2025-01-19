@@ -11,7 +11,7 @@ The overview of the deployment steps is given below:
 4. Configure an internet-facing Application Load Balancer Controller (alb) with helm:
     - create Service account for alb
     - associate an IAM OIDC (OpenID Connect) provider
-5. Create a kubeconfig file that enables the kubectl command-line tool to communication with the API of the newly created kubernetes cluster
+5. Create a kubeconfig file that enables the kubectl command-line tool to communicate with the API of the newly created kubernetes cluster
 
 ```
 aws eks update-kubeconfig --region us-west-2 --name k8-dir-app
