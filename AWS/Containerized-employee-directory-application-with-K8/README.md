@@ -1,8 +1,8 @@
 ## Employee Directory Application leveraging Kubernetes, Managed Node Groups, Amazon S3, and Amazon DynamoDB
 
-Kubernetes is an open-source container orchestration system for automatic deployment, scaling, coordination, and management of containerized applications. Amazon EKS is the offering from AWS that offers a fully managed kubernetes service to run seamless kubernetes workloads in the AWS Cloud.
+Kubernetes is an open-source container orchestration system for automated deployment, scaling, coordination, and management of containerized applications. Amazon EKS is an AWS offering that offers a fully managed Kubernetes service to run seamless Kubernetes workloads in the AWS Cloud.
 
-This terraform script and accompanying yaml configuration file have been developed to automatically provision a kubernetes cluster comprising a control plane and worker nodes to seamlessly run an employee directory application that leverages Amazon S3 and DynamoDB at the backend.
+This project presents a terraform script and accompanying Kubernetes configuration file that automates the provisioning of a kubernetes cluster comprising a control plane and worker nodes to seamlessly run an employee directory application that leverages Amazon S3 and DynamoDB at the backend.
 
 The overview of the deployment steps is given below:
 1. Define foundational networking/security architecture - public subnets, private subnets, NAT gateway (NAT gateway is required for   internet connection to pods hosted in private subnets)
