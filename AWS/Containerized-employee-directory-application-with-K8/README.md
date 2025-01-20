@@ -16,7 +16,7 @@ The overview of the deployment steps is given below:
 ```
 aws eks update-kubeconfig --region us-west-2 --name k8-dir-app
 ```
-6. Apply the kubernetes deployment configuration (webapp.yaml)
+6. Create and apply the kubernetes deployment configuration (webapp.yaml)
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/adejokun/Infrastructure-as-Code/refs/heads/main/AWS/Containerized-employee-directory-application-with-K8/webapp.yaml 
