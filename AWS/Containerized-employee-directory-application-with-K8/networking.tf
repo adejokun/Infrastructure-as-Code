@@ -169,31 +169,3 @@ resource "aws_subnet" "private-02" { # subnet-02 for managed node group
   }
 }
 
-/*
-## Create EKS node group security group
-resource "aws_security_group" "node-grp" {
-  name        = "k8-t-node-grp"
-  description = "Allows remote access to node group"
-  vpc_id      = aws_vpc.k8-t-vpc.id
-
-  tags = {
-    Name = "k8-t-node-grp"
-  }
-}
-
-resource "aws_vpc_security_group_ingress_rule" "http" {
-  security_group_id = aws_security_group.node-grp.id
-  
-  cidr_ipv4   = "0.0.0.0/0" # restrict block for production workloads
-  from_port   = 22
-  ip_protocol = "tcp"
-  to_port     = 22
-
-}
-
-resource "aws_vpc_security_group_egress_rule" "egress-all" {
-  security_group_id = aws_security_group.node-grp.id
-  cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1" # semantically equivalent to all ports
-}
-*/
