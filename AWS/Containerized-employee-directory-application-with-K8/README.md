@@ -2,10 +2,10 @@
 
 Kubernetes is an open-source container orchestration system for automated deployment, scaling, coordination, and management of containerized applications. Amazon EKS is an AWS offering that offers a fully managed Kubernetes service to run seamless Kubernetes workloads in the AWS Cloud.
 
-This project presents a terraform script and accompanying Kubernetes configuration file that automates the provisioning of a kubernetes cluster comprising a control plane and worker nodes to seamlessly run an employee directory application that leverages Amazon S3 and DynamoDB at the backend.
+This project presents a terraform script and accompanying Kubernetes configuration file that automates the provisioning of a kubernetes cluster comprising a control plane and worker nodes to seamlessly deploy a multi-tier application that leverages Amazon S3 and DynamoDB at the backend.
 
 The overview of the deployment steps is given below:
-1. Define foundational networking/security architecture - public subnets, private subnets, NAT gateway (NAT gateway is required for   internet connection to pods hosted in private subnets)
+1. Define foundational networking/security architecture - public subnets, private subnets, NAT gateway (NAT gateway is required for   internet connection to pods hosted in private subnets), security groups etc
 2. Create a kubernetes control plane in the public subnets. Associate relevant permissions by attaching required policy   (AmazonEKSClusterPolicy) to an IAM role
 3. Create a managed node group in the private subnets. Associate relevant permissions by attaching required policies    (AmazonEC2ContainerRegistryReadOnly, AmazonEKS_CNI_Policy, AmazonEKSWorkerNodePolicy, AmazonDynamoDBFullAccess, AmazonS3FullAccess) to an IAM role
 4. Configure an internet-facing Application Load Balancer Controller (alb) with helm:
