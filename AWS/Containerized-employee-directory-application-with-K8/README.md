@@ -2,7 +2,9 @@
 
 Kubernetes is an open-source container orchestration system for automated deployment, scaling, coordination, and management of containerized applications. Amazon EKS is an AWS offering that offers a fully managed Kubernetes service to run seamless Kubernetes workloads in the AWS Cloud. (*Containers, unlike virtual machines, provide an isolated light-weight environment that enables fast and reliable deployment of applications*)
 
-Examples of other container orchestrators include Amazon ECS (proprietary to AWS), Docker Swarm, Hashicorp Nomad
+Examples of other container orchestrators include Amazon ECS (proprietary to AWS), Docker Swarm, Hashicorp Nomad.
+
+An overview of the architecture of EKS is given below:
 
 ![EKS Architecture](https://github.com/adejokun/Infrastructure-as-Code/blob/main/Image/EKS-Architecture.png)
 
