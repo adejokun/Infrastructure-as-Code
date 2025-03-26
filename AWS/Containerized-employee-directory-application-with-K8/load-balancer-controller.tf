@@ -1,3 +1,5 @@
+## A load balancer controller creates an AWS Application Load Balancer (ALB) in conjuction with a Kubernetes Ingress (Kubernetes configuration file). 
+
 ## IAM role for load balancer controller
 module "lb_role" {
   source    = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
