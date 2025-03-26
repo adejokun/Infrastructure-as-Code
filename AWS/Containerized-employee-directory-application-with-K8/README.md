@@ -32,3 +32,6 @@ kubectl apply -f https://raw.githubusercontent.com/adejokun/Infrastructure-as-Co
 ```
 kubectl get ingress/ingress-employee-dir -n employee-dir-app-02
 ```
+
+Architecture is given below:
+![EKS Project Architecture](https://github.com/adejokun/Infrastructure-as-Code/blob/main/Image/EKS-Project-Architecture.png)

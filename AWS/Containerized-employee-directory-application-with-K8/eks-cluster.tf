@@ -16,7 +16,7 @@ module "eks" {
   cluster_endpoint_public_access           = true
   cluster_endpoint_private_access          = true 
   cluster_endpoint_public_access_cidrs     = ["0.0.0.0/0"]
-  enable_irsa                              = true
+  enable_irsa                              = true         /* irsa = IAM roles for service accounts */
   vpc_id                                   = aws_vpc.k8-t-vpc.id
   subnet_ids                               = [aws_subnet.private-01.id, aws_subnet.private-02.id] 
   control_plane_subnet_ids                 = [aws_subnet.public-01.id, aws_subnet.public-02.id]
